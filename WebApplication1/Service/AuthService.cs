@@ -9,7 +9,8 @@ namespace WebApplication1.Service
     }
     public class AuthService : IAuthService
     {
-        // Авторизация - уста
+        // Аутентификация - установление факта личности. Результат: токен
+        // Авторизация - проверка доступа. Результат: одобрение или отклонение.
         public async Task<string?> Authenticate(LoginRequest request)
         {
             return "";
