@@ -1,9 +1,12 @@
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.IdentityModel.Tokens.Experimental;
 using System.Text;
+using WebApplication1.Repository;
+using WebApplication1.Service;
 
 namespace WebApplication1
 {
@@ -12,6 +15,20 @@ namespace WebApplication1
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            
+            /*
+             Времена жизни сервисов:
+            1. AddTransient - создается новый экземпляр при каждом обращении.
+            2. AddScoped - создается новый экземпляр в новой области видимости.
+            3. AddSingleton - создается один экземпляр на все приложение.
+             */
+            builder.Services.AddDbContext<AppDbContext>(options =>
+            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddScoped<IJWTService, JWTService>();
+            builder.Services.AddScoped<IUserRepo, UserRepo>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
+
+            
 
             // Add services to the container.
 
